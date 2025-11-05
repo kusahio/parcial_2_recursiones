@@ -25,26 +25,48 @@ def obtener_lista_pokemon(limit, offset):
         return [p["name"] for p in data["results"]]
     return []
 
+def verificar_si_ya_existe_precarga(base_dir="pokedex"):
+    """
+    Verifica si ya existe al menos un archivo CSV en la estructura.
+    Si existe, asume que la precarga ya se realizó.
+    """
+    if not os.path.exists(base_dir):
+        return False
+    
+    # Buscar recursivamente cualquier archivo .csv
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            if file.endswith(".csv"):
+                return True
+    return False
+
 def precargar_pokemon():
     """
-    Carga automáticamente Pokémon por generación si no existen.
+    Carga automáticamente Pokémon por generación SOLO si no existe ningún CSV.
     Muestra solo un resumen por generación.
     """
     base_dir = "pokedex"
+    
+    # 🔹 Verificar si ya existe precarga
+    if verificar_si_ya_existe_precarga(base_dir):
+        print("\n✅ La Pokédex ya contiene datos. Omitiendo precarga automática.\n")
+        return
+    
+    print("\n🔄 Primera vez detectada. Iniciando precarga automática de Pokémon...")
+    
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
 
-    print("\nIniciando precarga automática de Pokémon...")
     resumen = {}
 
     for gen, datos in GENERACIONES.items():
         nuevos = 0
         existentes = 0
 
-        # Tomar solo los primeros 50 para no sobrecargar
+        # Tomar solo los primeros 5 para no sobrecargar
         nombres = obtener_lista_pokemon(5, datos["offset"])
         if not nombres:
-            print(f"No se pudieron obtener Pokémon de {gen}.")
+            print(f"⚠️  No se pudieron obtener Pokémon de {gen}.")
             continue
 
         for nombre in nombres:
@@ -63,7 +85,7 @@ def precargar_pokemon():
 
         resumen[gen] = {"nuevos": nuevos, "existentes": existentes}
 
-    print("\nPrecarga completada:\n")
+    print("\n✅ Precarga completada:\n")
     for gen, datos in resumen.items():
         print(f"📘 {gen}: {datos['nuevos']} nuevos | {datos['existentes']} ya existentes")
     print()
