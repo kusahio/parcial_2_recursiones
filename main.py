@@ -1,13 +1,12 @@
-from funciones.crud import agregar_pokemon, mostrar_todos, modificar_pokemon, eliminar_pokemon, estadisticas
+from funciones.crud import agregar_pokemon, mostrar_todos, buscar_pokemon, editar_pokemon, borrar_pokemon, estadisticas
 from funciones.carga_automatica import precargar_pokemon
 from funciones.menu import menu
+
 def main():
     # Precarga automática al iniciar
     precargar_pokemon()
 
     while True:
-        
-
         opcion = menu()
         opcion_int = int(opcion) if opcion.isdigit() else 0
 
@@ -17,15 +16,15 @@ def main():
             case 2:
                 mostrar_todos()
             case 3:
-                modificar_pokemon()
+                buscar_pokemon()
             case 4:
-                nombre = input("Nombre del Pokémon a eliminar: ")
-                if not eliminar_pokemon(nombre):
-                    print("❌ Pokémon no encontrado.\n")
+                editar_pokemon()  # ✅ Llama a la función del CRUD, no a la de persistencia
             case 5:
-                estadisticas()
+                borrar_pokemon()
             case 6:
-                print("Cerrando Pokédex...")
+                estadisticas()
+            case 7:
+                print("\n👋 Gracias por usar la Pokédex. ¡Hasta pronto!")
                 break
             case _:
                 print("❌ Opción inválida, intenta de nuevo.\n")

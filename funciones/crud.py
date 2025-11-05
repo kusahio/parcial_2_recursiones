@@ -2,9 +2,10 @@ import os
 from .persistencia import guardar_pokemon, leer_recursivo, modificar_pokemon, eliminar_pokemon
 from api.api_pokemon import obtener_pokemon
 from .carga_automatica import precargar_pokemon
+from .busqueda import mostrar_resultados_busqueda
 
 
-# CREATE
+# ==================== CREATE ====================
 def agregar_pokemon():
     """
     Agrega un Pokémon a la Pokédex.
@@ -18,7 +19,7 @@ def agregar_pokemon():
     
     print(f"\n🔍 Buscando '{nombre}' en la PokéAPI...")
     
-    pokemon = obtener_pokemon(nombre)  # YA NO necesita el parámetro generacion
+    pokemon = obtener_pokemon(nombre)
     if pokemon:
         guardar_pokemon(pokemon)
         print(f"\n✅ {nombre.capitalize()} agregado correctamente a la Pokédex.\n")
@@ -26,8 +27,11 @@ def agregar_pokemon():
         print(f"\n❌ No se pudo agregar '{nombre}'. Verifica el nombre e intenta nuevamente.\n")
 
 
-# READ
+# ==================== READ ====================
 def mostrar_todos():
+    """
+    Muestra todos los Pokémon guardados en la Pokédex.
+    """
     if not os.path.exists("pokedex"):
         print("📭 No hay datos aún.\n")
         return
@@ -54,51 +58,102 @@ def mostrar_todos():
     print("="*80 + "\n")
 
 
-# UPDATE
+# ==================== SEARCH (NUEVO) ====================
+def buscar_pokemon():
+    """
+    Busca Pokémon por similitud de nombre con un mínimo de 3 caracteres.
+    Muestra todas las coincidencias ordenadas por porcentaje de similitud.
+    """
+    print("\n" + "="*60)
+    print("🔍 BÚSQUEDA DE POKÉMON POR SIMILITUD")
+    print("="*60)
+    
+    termino = input("\nIngresa el nombre o parte del nombre (mínimo 3 caracteres): ").strip()
+    
+    if len(termino) < 3:
+        print("\n❌ Debes ingresar al menos 3 caracteres para realizar la búsqueda.\n")
+        return
+    
+    mostrar_resultados_busqueda(termino)
+
+
+# ==================== UPDATE ====================
 def editar_pokemon():
-    nombre = input("Nombre del Pokémon a modificar: ").strip().lower()
+    """
+    Modifica un campo específico de un Pokémon existente.
+    """
+    print("\n" + "="*60)
+    print("✏️  MODIFICAR POKÉMON")
+    print("="*60)
+    
+    nombre = input("\nNombre del Pokémon a modificar: ").strip().lower()
     
     if not nombre:
         print("❌ Debes ingresar un nombre válido.\n")
         return
     
-    print("\nCampos modificables:")
-    print("  - peso")
-    print("  - altura")
-    print("  - habilidades")
-    print("  - areas_encuentro")
-    print("  - base_experience")
+    print("\n📝 Campos modificables:")
+    print("  • peso")
+    print("  • altura")
+    print("  • habilidades")
+    print("  • areas_encuentro")
+    print("  • base_experience")
     
     campo = input("\nCampo a modificar: ").strip().lower()
+    
+    # Validar que el campo existe
+    campos_validos = ["peso", "altura", "habilidades", "areas_encuentro", "base_experience"]
+    if campo not in campos_validos:
+        print(f"\n❌ Campo '{campo}' no válido. Elige uno de la lista.\n")
+        return
+    
     nuevo_valor = input("Nuevo valor: ").strip()
+    
+    if not nuevo_valor:
+        print("❌ El valor no puede estar vacío.\n")
+        return
     
     if modificar_pokemon(nombre, campo, nuevo_valor):
         print(f"\n✅ {nombre.capitalize()} modificado correctamente.\n")
     else:
-        print(f"\n❌ No se pudo modificar '{nombre}'.\n")
+        print(f"\n❌ No se pudo modificar '{nombre}'. Verifica que el Pokémon exista.\n")
 
 
-# DELETE
+# ==================== DELETE ====================
 def borrar_pokemon():
-    nombre = input("Nombre del Pokémon a eliminar: ").strip().lower()
+    """
+    Elimina un Pokémon de la Pokédex después de confirmar la acción.
+    """
+    print("\n" + "="*60)
+    print("🗑️  ELIMINAR POKÉMON")
+    print("="*60)
+    
+    nombre = input("\nNombre del Pokémon a eliminar: ").strip().lower()
     
     if not nombre:
         print("❌ Debes ingresar un nombre válido.\n")
         return
     
-    confirmacion = input(f"⚠️  ¿Estás seguro de eliminar a {nombre.capitalize()}? (s/n): ").lower()
+    confirmacion = input(f"\n⚠️  ¿Estás seguro de eliminar a {nombre.capitalize()}? (s/n): ").lower()
     
     if confirmacion == 's':
         if eliminar_pokemon(nombre):
-            print(f"\n✅ {nombre.capitalize()} eliminado correctamente.\n")
+            print(f"\n✅ {nombre.capitalize()} eliminado correctamente de la Pokédex.\n")
         else:
-            print(f"\n❌ Pokémon '{nombre}' no encontrado.\n")
+            print(f"\n❌ Pokémon '{nombre}' no encontrado en la Pokédex.\n")
     else:
         print("\n❌ Eliminación cancelada.\n")
 
 
-# 📊 ESTADÍSTICAS
+# ==================== ESTADÍSTICAS ====================
 def estadisticas():
+    """
+    Muestra estadísticas generales de la Pokédex:
+    - Total de Pokémon
+    - Promedios de peso y altura
+    - Distribución por tipo
+    - Distribución por generación
+    """
     if not os.path.exists("pokedex"):
         print("📭 No hay datos registrados.\n")
         return
@@ -110,7 +165,7 @@ def estadisticas():
 
     total = len(datos)
     
-    # Calcular promedios
+    # Calcular promedios de peso y altura
     pesos = [float(p["peso"]) for p in datos if p.get("peso", "").replace(".", "").isdigit()]
     alturas = [float(p["altura"]) for p in datos if p.get("altura", "").replace(".", "").isdigit()]
     
@@ -129,24 +184,32 @@ def estadisticas():
         gen = p.get("generacion", "desconocida")
         generaciones[gen] = generaciones.get(gen, 0) + 1
 
-    print("\n" + "="*60)
+    # Mostrar estadísticas
+    print("\n" + "="*70)
     print("📊 ESTADÍSTICAS GLOBALES DE LA POKÉDEX")
-    print("="*60)
+    print("="*70)
     print(f"\n📈 Total de Pokémon registrados: {total}")
     print(f"⚖️  Peso promedio: {promedio_peso:.2f}")
     print(f"📏 Altura promedio: {promedio_altura:.2f}")
     
     print("\n🎨 Distribución por tipo:")
     for tipo, cantidad in sorted(tipos.items(), key=lambda x: x[1], reverse=True):
-        print(f"   └─ {tipo.capitalize()}: {cantidad}")
+        porcentaje = (cantidad / total) * 100
+        barra = "█" * int(porcentaje / 5)
+        print(f"   └─ {tipo.capitalize():<15}: {cantidad:>3} ({porcentaje:>5.1f}%) {barra}")
     
     print("\n🌍 Distribución por generación:")
     for gen, cantidad in sorted(generaciones.items()):
-        print(f"   └─ {gen}: {cantidad}")
+        porcentaje = (cantidad / total) * 100
+        barra = "█" * int(porcentaje / 5)
+        print(f"   └─ {gen:<20}: {cantidad:>3} ({porcentaje:>5.1f}%) {barra}")
     
-    print("="*60 + "\n")
+    print("="*70 + "\n")
 
 
-# CARGA AUTOMÁTICA AL INICIO
+# ==================== CARGA AUTOMÁTICA ====================
 def iniciar_sistema():
+    """
+    Precarga automática de Pokémon al iniciar el sistema.
+    """
     precargar_pokemon()
