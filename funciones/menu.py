@@ -1,5 +1,5 @@
 def menu():
-    print(f'\n{'='*30} POKÉDEX {'='*30}\n')
+    print(f'\n{'='*10} POKÉDEX {'='*50}\n')
     print('1)   Agregar Pokémon a la Pokédex')
     print('2)   Mostrar todos los Pokémon registrados')
     print('3)   Buscar Pokémon por similitud')

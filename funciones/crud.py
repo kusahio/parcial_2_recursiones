@@ -6,7 +6,7 @@ from .busqueda import mostrar_resultados_busqueda
 from .paginador import paginar_pokemon
 
 
-# ==================== CREATE ====================
+# CREATE
 def agregar_pokemon():
     """
     Agrega un Pokémon a la Pokédex.
@@ -18,14 +18,14 @@ def agregar_pokemon():
         print("AVISO: Debes ingresar un nombre válido.\n")
         return
     
-    print(f"\n🔍 Buscando '{nombre}' en la PokéAPI...")
+    print(f"\nBuscando '{nombre}' en la PokéAPI...")
     
     pokemon = obtener_pokemon(nombre)
     if pokemon:
         guardar_pokemon(pokemon)
-        print(f"\n{nombre.capitalize()} agregado correctamente a la Pokédex.\n")
+        print(f"\n{nombre.capitalize()} agregado correctamente a la Pokédex.")
     else:
-        print(f"\nNo se pudo agregar '{nombre}' a la Pokédex. Verifica el nombre e intenta nuevamente.\n")
+        print(f"\nNo se pudo agregar '{nombre}' a la Pokédex. Verifica el nombre e intenta nuevamente.")
 
 
 # READ
