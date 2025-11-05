@@ -61,7 +61,7 @@ def existe_pokemon_en_csv(nombre, archivo):
     return False
 
 
-# READ (Recursivo real)
+# READ
 def leer_recursivo(ruta):
     """
     Lee todos los CSVs de forma recursiva y devuelve una lista de Pokémon.
@@ -157,7 +157,6 @@ def buscar_y_modificar_recursivo(ruta, nombre, campo, nuevo_valor):
 def modificar_pokemon(nombre, campo, nuevo_valor, ruta_base="pokedex"):
     """
     Modifica un campo de un Pokémon específico usando recursión.
-    Reemplaza completamente el uso de os.walk().
     """
     if buscar_y_modificar_recursivo(ruta_base, nombre, campo, nuevo_valor):
         return True
@@ -169,7 +168,6 @@ def modificar_pokemon(nombre, campo, nuevo_valor, ruta_base="pokedex"):
 def eliminar_pokemon_recursivo(ruta, nombre):
     """
     Elimina un Pokémon de forma recursiva en la estructura de directorios.
-    REEMPLAZA os.walk() completamente.
     
     Recursión:
         - Caso base: Si es archivo CSV, busca y elimina el Pokémon

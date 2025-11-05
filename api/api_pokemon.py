@@ -46,11 +46,11 @@ def obtener_pokemon(nombre):
             "generacion": generacion
         }
 
-        print("\n✅ Pokémon obtenido correctamente:")
+        print("\nPokémon agregado a la Pokédex correctamente:")
         for k, v in pokemon.items():
             print(f"  {k.capitalize()}: {v}")
 
         return pokemon
     else:
-        print(f"❌ No se encontró el Pokémon '{nombre}' en la PokéAPI.")
+        print(f"No se encontró el Pokémon '{nombre}' en la PokéAPI.")
         return None

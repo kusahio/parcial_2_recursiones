@@ -3,7 +3,7 @@ import os
 from api.api_pokemon import obtener_pokemon
 from .persistencia import guardar_pokemon, existe_pokemon_en_csv
 
-# 🔹 Rangos de Pokémon por generación (según PokéAPI)
+# Rangos de Pokémon por generación (según PokéAPI)
 GENERACIONES = {
     "generation-i":  {"offset": 0, "limit": 151},      # Bulbasaur → Mew
     "generation-ii": {"offset": 151, "limit": 100},    # Chikorita → Celebi
@@ -47,12 +47,12 @@ def precargar_pokemon():
     """
     base_dir = "pokedex"
     
-    # 🔹 Verificar si ya existe precarga
+    # Verificar si ya existe precarga
     if verificar_si_ya_existe_precarga(base_dir):
-        print("\n✅ La Pokédex ya contiene datos. Omitiendo precarga automática.\n")
+        print("\nAVISO: Ya tienes datos en tu Pokédex. Cancelando carga inicial\n")
         return
     
-    print("\n🔄 Primera vez detectada. Iniciando precarga automática de Pokémon...")
+    print("\nAVISO: Importando tus registros de Pokémon a la Pokédex...")
     
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
@@ -66,7 +66,7 @@ def precargar_pokemon():
         # Tomar solo los primeros 5 para no sobrecargar
         nombres = obtener_lista_pokemon(5, datos["offset"])
         if not nombres:
-            print(f"⚠️  No se pudieron obtener Pokémon de {gen}.")
+            print(f"\nAVISO: No se pudieron obtener Pokémon de {gen}.")
             continue
 
         for nombre in nombres:
@@ -85,7 +85,7 @@ def precargar_pokemon():
 
         resumen[gen] = {"nuevos": nuevos, "existentes": existentes}
 
-    print("\n✅ Precarga completada:\n")
+    print("\nAVISO: Transferencia de datos a la Pokédex completada:\n")
     for gen, datos in resumen.items():
-        print(f"📘 {gen}: {datos['nuevos']} nuevos | {datos['existentes']} ya existentes")
+        print(f"{gen}: {datos['nuevos']} registros agregados  la Pokédex.")
     print()

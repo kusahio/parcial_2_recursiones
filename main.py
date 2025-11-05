@@ -29,10 +29,12 @@ def main():
             case 8:
                 estadisticas()
             case 9:
-                print("\n👋 Gracias por usar la Pokédex. ¡Hasta pronto!")
+                print("\nCerrando sesión de Pokédex...")
+                print("Apagando Pokédex......")
+                print("Proceso de Pokédex finalizado.........")
                 break
             case _:
-                print("❌ Opción inválida, intenta de nuevo.\n")
+                print("Opción inválida, intenta de nuevo.\n")
 
 if __name__ == "__main__":
     main()
