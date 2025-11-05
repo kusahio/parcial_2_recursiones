@@ -1,5 +1,6 @@
 import os
 from .persistencia import leer_recursivo
+from .paginador import paginar_pokemon
 
 
 def calcular_similitud(str1, str2):
@@ -130,7 +131,7 @@ def buscar_pokemon_por_similitud(termino_busqueda, umbral_similitud=60):
 
 def mostrar_resultados_busqueda(termino_busqueda, umbral=60):
     """
-    Muestra los resultados de búsqueda por similitud de forma visual.
+    Muestra los resultados de búsqueda por similitud con paginación.
     
     Args:
         termino_busqueda: Término a buscar
@@ -150,48 +151,13 @@ def mostrar_resultados_busqueda(termino_busqueda, umbral=60):
         print("   • Verificar la ortografía\n")
         return
     
-    # Mostrar encabezado
-    print("\n" + "="*80)
-    print(f"📋 RESULTADOS DE BÚSQUEDA: '{termino_busqueda.upper()}'")
-    print("="*80)
-    print(f"✅ Se encontraron {len(resultados)} coincidencia(s)\n")
+    # Extraer solo los pokémon (sin el porcentaje de similitud)
+    pokemon_list = [pokemon for pokemon, similitud in resultados]
     
-    # Mostrar cada resultado
-    for i, (pokemon, similitud) in enumerate(resultados, 1):
-        # Crear barra de similitud visual
-        barras_llenas = int(similitud / 10)
-        barras_vacias = 10 - barras_llenas
-        barra_visual = "█" * barras_llenas + "░" * barras_vacias
-        
-        # Determinar color/emoji según similitud
-        if similitud >= 90:
-            emoji = "🎯"
-        elif similitud >= 75:
-            emoji = "✅"
-        elif similitud >= 60:
-            emoji = "🔍"
-        else:
-            emoji = "❓"
-        
-        # Mostrar información del Pokémon
-        print(f"{i}. {emoji} {pokemon['nombre'].upper()} [{similitud:.1f}% similitud]")
-        print(f"   {barra_visual} {similitud:.1f}%")
-        print(f"   ├─ ID: #{pokemon.get('id', 'N/A')}")
-        print(f"   ├─ Tipo: {pokemon['tipo'].capitalize()}")
-        print(f"   ├─ Generación: {pokemon['generacion']}")
-        print(f"   ├─ Peso: {pokemon['peso']} | Altura: {pokemon['altura']}")
-        print(f"   ├─ Experiencia base: {pokemon.get('base_experience', 'N/A')}")
-        
-        if pokemon.get('habilidades'):
-            habilidades = pokemon['habilidades']
-            print(f"   └─ Habilidades: {habilidades}")
-        else:
-            print(f"   └─ Habilidades: N/A")
-        
-        print()  # Línea en blanco entre resultados
-    
-    # Mostrar resumen final
-    print("="*80)
-    print(f"📊 Total de coincidencias: {len(resultados)}")
-    print(f"🎯 Mejor coincidencia: {resultados[0][0]['nombre'].capitalize()} ({resultados[0][1]:.1f}%)")
-    print("="*80 + "\n")
+    # Mostrar con paginador
+    paginar_pokemon(
+        resultados=pokemon_list,
+        pokemon_por_pagina=10,
+        titulo=f"🔍 RESULTADOS DE BÚSQUEDA: '{termino_busqueda.upper()}'\n{len(resultados)} coincidencia(s) encontrada(s)",
+        tipo_formato='completo'
+    )

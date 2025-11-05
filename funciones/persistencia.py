@@ -133,7 +133,7 @@ def buscar_y_modificar_recursivo(ruta, nombre, campo, nuevo_valor):
                 writer = csv.DictWriter(f, fieldnames=CAMPOS)
                 writer.writeheader()
                 writer.writerows(data)
-            print(f"✅ {nombre.capitalize()} modificado correctamente en {ruta}")
+            print(f"{nombre.capitalize()} modificado correctamente en {ruta}")
             return True
         
         return False

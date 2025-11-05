@@ -3,6 +3,7 @@ from .persistencia import guardar_pokemon, leer_recursivo, modificar_pokemon, el
 from api.api_pokemon import obtener_pokemon
 from .carga_automatica import precargar_pokemon
 from .busqueda import mostrar_resultados_busqueda
+from .paginador import paginar_pokemon
 
 
 # ==================== CREATE ====================
@@ -22,7 +23,7 @@ def agregar_pokemon():
     pokemon = obtener_pokemon(nombre)
     if pokemon:
         guardar_pokemon(pokemon)
-        print(f"\n✅ {nombre.capitalize()} agregado correctamente a la Pokédex.\n")
+        print(f"\n{nombre.capitalize()} agregado correctamente a la Pokédex.\n")
     else:
         print(f"\nNo se pudo agregar '{nombre}' a la Pokédex. Verifica el nombre e intenta nuevamente.\n")
 
@@ -41,22 +42,28 @@ def mostrar_todos():
         print("\nAVISO: No hay registros en la Pokédex.\n")
         return
 
-    print("\n" + "="*80)
-    print("LISTA DE POKÉMON EN LA POKÉDEX")
-    print("="*80)
+    # print("\n" + "="*80)
+    # print("LISTA DE POKÉMON EN LA POKÉDEX")
+    # print("="*80)
     
-    for i, d in enumerate(datos, 1):
-        print(f"\n{i}. {d['nombre'].upper()}")
-        print(f"    Tipo: {d['tipo']} | Generación: {d['generacion']}")
-        print(f"    Peso: {d['peso']} | Altura: {d['altura']}")
-        print(f"    Experiencia base: {d.get('base_experience', 'N/A')}")
-        if d.get('habilidades'):
-            print(f"        Habilidades: {d['habilidades']}")
+    # for i, d in enumerate(datos, 1):
+    #     print(f"\n{i}. {d['nombre'].upper()}")
+    #     print(f"    Tipo: {d['tipo']} | Generación: {d['generacion']}")
+    #     print(f"    Peso: {d['peso']} | Altura: {d['altura']}")
+    #     print(f"    Experiencia base: {d.get('base_experience', 'N/A')}")
+    #     if d.get('habilidades'):
+    #         print(f"        Habilidades: {d['habilidades']}")
 
-    print("\n" + "="*80)
-    print(f"Total: {len(datos)} Pokémon registrados")
-    print("="*80 + "\n")
+    # print("\n" + "="*80)
+    # print(f"Total: {len(datos)} Pokémon registrados")
+    # print("="*80 + "\n")
 
+    paginar_pokemon(
+        resultados=datos,
+        pokemon_por_pagina=10,
+        titulo='LISTA DE POKÉMON EN LA POKÉDEX',
+        tipo_formato='completo'
+    )
 
 # Buscar
 def buscar_pokemon():
