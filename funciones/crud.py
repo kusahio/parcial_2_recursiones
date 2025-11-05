@@ -202,14 +202,12 @@ def estadisticas():
     print("\nDistribución por tipo:")
     for tipo, cantidad in sorted(tipos.items(), key=lambda x: x[1], reverse=True):
         porcentaje = (cantidad / total) * 100
-        #barra = "█" * int(porcentaje / 5)
-        print(f"    {tipo.capitalize():<15}: {cantidad:>3} ({porcentaje:>5.1f}%)")
+        print(f"    {tipo.capitalize():<15}: {cantidad:>3} Pokémon(es) ({porcentaje:>5.1f}%)")
     
-    print("\n🌍 Distribución por generación:")
+    print("\nDistribución por generación:")
     for gen, cantidad in sorted(generaciones.items()):
         porcentaje = (cantidad / total) * 100
-        #barra = "█" * int(porcentaje / 5)
-        print(f"    {gen:<20}: {cantidad:>3} ({porcentaje:>5.1f}%)")
+        print(f"    {gen:<20}: {cantidad:>3} Pokémon(es) ({porcentaje:>5.1f}%)")
     
     print("="*70 + "\n")
 

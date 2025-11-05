@@ -2,7 +2,7 @@ def menu():
     print(f'\n{'='*10} POKÉDEX {'='*50}\n')
     print('1)   Agregar Pokémon a la Pokédex')
     print('2)   Mostrar todos los Pokémon registrados')
-    print('3)   Buscar Pokémon por similitud')
+    print('3)   Buscar Pokémon')
     print('4)   Filtrar por generación')
     print('5)   Filtrar por tipo')
     print('6)   Modificar Pokémon en la Pokédex')

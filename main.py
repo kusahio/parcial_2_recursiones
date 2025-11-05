@@ -57,9 +57,6 @@ def main():
                     case 8:
                         estadisticas()
                     case 9:
-                        print("\n" + "="*70)
-                        print("CERRANDO SISTEMA POKÉDEX")
-                        print("="*70)
                         print("\n✓ Cerrando sesión de Pokédex...")
                         print("✓ Apagando Pokédex......")
                         print("✓ Proceso de Pokédex finalizado.........\n")
@@ -68,42 +65,42 @@ def main():
                         print("\nAVISO: Opción inválida, intenta de nuevo.\n")
                         
             except ValueError as e:
-                print(f"\n[Error] Valor inválido ingresado: {e}\n")
+                print(f"\nAVISO: Valor inválido ingresado: {e}\n")
                 continue
             except KeyboardInterrupt:
                 print("\n\n" + "="*70)
-                print("INTERRUPCIÓN DETECTADA")
+                print("Interrupción detectada")
                 print("="*70)
                 confirmacion = input("\n¿Deseas salir del sistema? (s/n): ").strip().lower()
                 if confirmacion == 's':
-                    print("\n✓ Saliendo del sistema Pokédex...\n")
+                    print("\nSaliendo del sistema Pokédex...\n")
                     break
                 else:
-                    print("\n✓ Continuando con el sistema...\n")
+                    print("\nContinuando con el sistema...\n")
                     continue
             except Exception as e:
-                print(f"\n[Error] Error inesperado en el menú: {e}")
+                print(f"\nAVISO: Error inesperado en el menú: {e}")
                 print("Continuando con el sistema...\n")
                 continue
     
     except KeyboardInterrupt:
         print("\n\n" + "="*70)
-        print("SISTEMA INTERRUMPIDO POR EL USUARIO")
+        print("Sistema interrumpido por el usuario")
         print("="*70)
         print("\n✓ Saliendo del sistema Pokédex...\n")
     
     except ImportError as e:
         print("\n" + "="*70)
-        print("ERROR CRÍTICO")
+        print("Error Crítico")
         print("="*70)
-        print(f"\n[Error Fatal] No se pudieron importar los módulos necesarios: {e}")
+        print(f"\nAVISO: No se pudieron importar los módulos necesarios: {e}")
         print("Verifica que todos los archivos del sistema estén presentes.\n")
     
     except Exception as e:
         print("\n" + "="*70)
-        print("ERROR CRÍTICO")
+        print("Error Crítico")
         print("="*70)
-        print(f"\n[Error Fatal] Error inesperado al iniciar el sistema: {e}")
+        print(f"\nAVISO: Error inesperado al iniciar el sistema: {e}")
         print("El sistema se cerrará de forma segura.\n")
     
     finally:
@@ -117,4 +114,4 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(f"\n[Error Fatal] El sistema no pudo iniciarse: {e}\n")
+        print(f"\nAVISO: El sistema no pudo iniciarse: {e}\n")

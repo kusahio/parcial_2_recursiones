@@ -98,10 +98,87 @@ def obtener_lista_pokemon(limit, offset):
         return []
 
 
+def buscar_csv_recursivo(ruta):
+    """
+    Busca recursivamente archivos CSV en la estructura de directorios.
+    
+    CASO BASE: Si encuentra un archivo .csv, retorna True
+    PASO RECURSIVO: Si es un directorio, explora cada elemento dentro
+    
+    Args:
+        ruta: Ruta del directorio o archivo a explorar
+        
+    Returns:
+        bool: True si encuentra al menos un archivo CSV, False en caso contrario
+    """
+    try:
+        # Validar que la ruta sea un string
+        if not isinstance(ruta, str) or not ruta.strip():
+            return False
+        
+        # Validar que la ruta exista
+        if not os.path.exists(ruta):
+            return False
+        
+        # CASO BASE 1: Si es un archivo
+        if os.path.isfile(ruta):
+            # Verificar si es un archivo CSV
+            if ruta.endswith('.csv'):
+                return True  # ¡Encontramos un CSV! Detener búsqueda
+            else:
+                return False  # No es CSV, no hay más que buscar aquí
+        
+        # CASO BASE 2: Si es un directorio pero no podemos leerlo
+        if not os.path.isdir(ruta):
+            return False
+        
+        # PASO RECURSIVO: Es un directorio, explorar su contenido
+        try:
+            contenido = os.listdir(ruta)
+            
+            # Validar que contenido sea una lista
+            if not isinstance(contenido, list):
+                return False
+            
+            # Explorar cada elemento del directorio
+            for elemento in contenido:
+                try:
+                    # Validar que elemento sea string
+                    if not isinstance(elemento, str):
+                        continue
+                    
+                    # Construir ruta completa del elemento
+                    ruta_completa = os.path.join(ruta, elemento)
+                    
+                    # LLAMADA RECURSIVA: Explorar este elemento
+                    if buscar_csv_recursivo(ruta_completa):
+                        return True  # Encontramos CSV en la recursión
+                        
+                except Exception:
+                    # Si hay error con un elemento, continuar con el siguiente
+                    continue
+            
+            # Si llegamos aquí, no encontramos ningún CSV en este directorio
+            return False
+            
+        except PermissionError:
+            # No tenemos permisos para leer este directorio
+            return False
+        except OSError as e:
+            print(f"AVISO: Error al leer directorio {ruta}: {e}")
+            return False
+            
+    except Exception as e:
+        print(f"AVISO: Error inesperado en búsqueda recursiva: {e}")
+        return False
+
+
 def verificar_si_ya_existe_precarga(base_dir="pokedex"):
     """
     Verifica si ya existe al menos un archivo CSV en la estructura.
     Si existe, asume que la precarga ya se realizó.
+    
+    Usa búsqueda RECURSIVA para explorar toda la jerarquía de directorios.
     
     Args:
         base_dir: Directorio base de la pokédex
@@ -118,6 +195,7 @@ def verificar_si_ya_existe_precarga(base_dir="pokedex"):
         if not base_dir or not base_dir.strip():
             return False
         
+        # Verificar que el directorio exista
         if not os.path.exists(base_dir):
             return False
         
@@ -125,24 +203,8 @@ def verificar_si_ya_existe_precarga(base_dir="pokedex"):
         if not os.path.isdir(base_dir):
             return False
         
-        # Buscar recursivamente cualquier archivo .csv
-        try:
-            for root, dirs, files in os.walk(base_dir):
-                # Validar que files sea iterable
-                if not isinstance(files, list):
-                    continue
-                
-                for file in files:
-                    try:
-                        if isinstance(file, str) and file.endswith(".csv"):
-                            return True
-                    except Exception:
-                        continue
-        except OSError as e:
-            print(f"AVISO: Error al recorrer directorios: {e}")
-            return False
-        
-        return False
+        # Usar función recursiva para buscar CSV
+        return buscar_csv_recursivo(base_dir)
         
     except Exception as e:
         print(f"AVISO: Error al verificar precarga: {e}")
@@ -157,7 +219,7 @@ def precargar_pokemon():
     try:
         base_dir = "pokedex"
         
-        # Verificar si ya existe precarga
+        # Verificar si ya existe precarga (usando recursividad)
         if verificar_si_ya_existe_precarga(base_dir):
             print("\nAVISO: Ya tienes datos en tu Pokédex. Cancelando carga inicial\n")
             return
@@ -267,6 +329,6 @@ def precargar_pokemon():
             print("\nAVISO: No se pudieron cargar datos iniciales\n")
             
     except KeyboardInterrupt:
-        print("\n\nAVISO: Precarga cancelada por el usuario")
+        print("\nAVISO: Precarga cancelada por el usuario")
     except Exception as e:
         print(f"AVISO: Error inesperado en precarga: {e}")

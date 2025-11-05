@@ -136,7 +136,7 @@ def mostrar_pagina_pokemon(pokemon_lista, inicio_idx, titulo_pagina, tipo_format
         print(f"\nAVISO: Error al mostrar página: {e}")
 
 
-def paginar_pokemon(resultados, pokemon_por_pagina=10, titulo='Resultados', tipo_formato='completo'):
+def paginar_pokemon(resultados, pokemon_por_pagina=5, titulo='Resultados', tipo_formato='completo'):
     '''
     Muestra una lista de Pokémon con sistema de paginación interactivo.
     
