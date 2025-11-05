@@ -70,7 +70,7 @@ def precargar_pokemon():
             continue
 
         for nombre in nombres:
-            pokemon = obtener_pokemon(nombre, gen)
+            pokemon = obtener_pokemon(nombre)
             if not pokemon:
                 continue
 

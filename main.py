@@ -1,5 +1,6 @@
 from funciones.crud import agregar_pokemon, mostrar_todos, buscar_pokemon, editar_pokemon, borrar_pokemon, estadisticas
 from funciones.carga_automatica import precargar_pokemon
+from funciones.filtros import filtrar_por_generacion, filtrar_por_tipo
 from funciones.menu import menu
 
 def main():
@@ -18,12 +19,16 @@ def main():
             case 3:
                 buscar_pokemon()
             case 4:
-                editar_pokemon()  # ✅ Llama a la función del CRUD, no a la de persistencia
+                filtrar_por_generacion()
             case 5:
-                borrar_pokemon()
+                filtrar_por_tipo()
             case 6:
-                estadisticas()
+                editar_pokemon()
             case 7:
+                borrar_pokemon()
+            case 8:
+                estadisticas()
+            case 9:
                 print("\n👋 Gracias por usar la Pokédex. ¡Hasta pronto!")
                 break
             case _:
