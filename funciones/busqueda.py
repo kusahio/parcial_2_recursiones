@@ -46,6 +46,45 @@ def calcular_similitud(str1, str2):
     return similitud
 
 
+def buscar_csv_recursivo(ruta):
+    """
+    Busca archivos CSV de forma recursiva en una estructura de directorios.
+    
+    Args:
+        ruta: Directorio raíz desde donde buscar
+    
+    Returns:
+        bool: True si encuentra al menos un archivo CSV
+    """
+    # Caso base: si la ruta no existe
+    if not os.path.exists(ruta):
+        return False
+    
+    # Verificar si es un archivo
+    if os.path.isfile(ruta):
+        return ruta.endswith('.csv')
+    
+    # Paso recursivo: explorar subdirectorios
+    try:
+        elementos = os.listdir(ruta)
+    except PermissionError:
+        return False
+    
+    for elemento in elementos:
+        ruta_completa = os.path.join(ruta, elemento)
+        
+        # Si es un archivo CSV, retornar True
+        if os.path.isfile(ruta_completa) and elemento.endswith('.csv'):
+            return True
+        
+        # Si es un directorio, buscar recursivamente
+        if os.path.isdir(ruta_completa):
+            if buscar_csv_recursivo(ruta_completa):
+                return True
+    
+    return False
+
+
 def buscar_pokemon_por_similitud(termino_busqueda, umbral_similitud=60):
     """
     Busca Pokémon por similitud de nombre.
@@ -62,8 +101,8 @@ def buscar_pokemon_por_similitud(termino_busqueda, umbral_similitud=60):
         print("❌ Debes ingresar al menos 3 caracteres para buscar.\n")
         return []
     
-    # Verificar que exista la Pokédex
-    if not os.path.exists("pokedex"):
+    # Verificar que exista la Pokédex usando función recursiva
+    if not buscar_csv_recursivo("pokedex"):
         print("📭 No hay datos en la Pokédex.\n")
         return []
     

@@ -65,8 +65,16 @@ def existe_pokemon_en_csv(nombre, archivo):
 def leer_recursivo(ruta):
     """
     Lee todos los CSVs de forma recursiva y devuelve una lista de Pokémon.
-    Paso recursivo: entra a subcarpetas.
-    Caso base: lee los archivos .csv.
+    
+    Recursión:
+        - Caso base: Lee archivos .csv
+        - Paso recursivo: Entra a subcarpetas
+    
+    Args:
+        ruta: Directorio raíz desde donde leer
+    
+    Returns:
+        list: Lista de diccionarios con datos de Pokémon
     """
     datos = []
 
@@ -74,10 +82,10 @@ def leer_recursivo(ruta):
         ruta_completa = os.path.join(ruta, elemento)
 
         if os.path.isdir(ruta_completa):
-            # Paso recursivo
+            # Paso recursivo: explorar subdirectorio
             datos.extend(leer_recursivo(ruta_completa))
         elif ruta_completa.endswith(".csv"):
-            # Caso base
+            # Caso base: leer archivo CSV
             with open(ruta_completa, newline="", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 datos.extend(list(reader))
@@ -85,34 +93,129 @@ def leer_recursivo(ruta):
     return datos
 
 
+def buscar_y_modificar_recursivo(ruta, nombre, campo, nuevo_valor):
+    """
+    Busca y modifica un Pokémon de forma recursiva en la estructura de directorios.
+    REEMPLAZA os.walk() completamente.
+    
+    Recursión:
+        - Caso base: Si es archivo CSV, busca y modifica el Pokémon
+        - Paso recursivo: Si es directorio, explora cada elemento
+    
+    Args:
+        ruta: Directorio actual a explorar
+        nombre: Nombre del Pokémon a modificar
+        campo: Campo a modificar
+        nuevo_valor: Nuevo valor para el campo
+    
+    Returns:
+        bool: True si se modificó exitosamente
+    """
+    # Caso base: ruta no existe
+    if not os.path.exists(ruta):
+        return False
+    
+    # Caso base: es un archivo CSV
+    if os.path.isfile(ruta) and ruta.endswith(".csv"):
+        with open(ruta, newline="", encoding="utf-8") as f:
+            data = list(csv.DictReader(f))
+        
+        modificado = False
+        for d in data:
+            if d["nombre"].lower() == nombre.lower():
+                valor_viejo = d.get(campo, "")
+                d[campo] = nuevo_valor
+                modificado = True
+                print(f"\n{nombre.capitalize()} → {campo}: '{valor_viejo}' → '{nuevo_valor}'")
+        
+        if modificado:
+            with open(ruta, "w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=CAMPOS)
+                writer.writeheader()
+                writer.writerows(data)
+            print(f"✅ {nombre.capitalize()} modificado correctamente en {ruta}")
+            return True
+        
+        return False
+    
+    # Paso recursivo: explorar subdirectorios
+    if os.path.isdir(ruta):
+        try:
+            elementos = os.listdir(ruta)
+        except PermissionError:
+            return False
+        
+        for elemento in elementos:
+            ruta_completa = os.path.join(ruta, elemento)
+            if buscar_y_modificar_recursivo(ruta_completa, nombre, campo, nuevo_valor):
+                return True
+    
+    return False
+
+
 # UPDATE
 def modificar_pokemon(nombre, campo, nuevo_valor, ruta_base="pokedex"):
     """
-    Modifica un campo de un Pokémon específico.
+    Modifica un campo de un Pokémon específico usando recursión.
+    Reemplaza completamente el uso de os.walk().
     """
-    for root, _, files in os.walk(ruta_base):
-        for file in files:
-            if file.endswith(".csv"):
-                archivo = os.path.join(root, file)
-                with open(archivo, newline="", encoding="utf-8") as f:
-                    data = list(csv.DictReader(f))
-
-                modificado = False
-                for d in data:
-                    if d["nombre"].lower() == nombre.lower():
-                        valor_viejo = d.get(campo, "")
-                        d[campo] = nuevo_valor
-                        modificado = True
-                        print(f"\n{nombre.capitalize()} → {campo}: '{valor_viejo}' → '{nuevo_valor}'")
-
-                if modificado:
-                    with open(archivo, "w", newline="", encoding="utf-8") as f:
-                        writer = csv.DictWriter(f, fieldnames=CAMPOS)
-                        writer.writeheader()
-                        writer.writerows(data)
-                    print(f"✅ {nombre.capitalize()} modificado correctamente en {archivo}")
-                    return True
+    if buscar_y_modificar_recursivo(ruta_base, nombre, campo, nuevo_valor):
+        return True
+    
     print("Pokémon no encontrado.")
+    return False
+
+
+def eliminar_pokemon_recursivo(ruta, nombre):
+    """
+    Elimina un Pokémon de forma recursiva en la estructura de directorios.
+    REEMPLAZA os.walk() completamente.
+    
+    Recursión:
+        - Caso base: Si es archivo CSV, busca y elimina el Pokémon
+        - Paso recursivo: Si es directorio, explora cada elemento
+    
+    Args:
+        ruta: Directorio actual a explorar
+        nombre: Nombre del Pokémon a eliminar
+    
+    Returns:
+        bool: True si se eliminó exitosamente
+    """
+    # Caso base: ruta no existe
+    if not os.path.exists(ruta):
+        return False
+    
+    # Caso base: es un archivo CSV
+    if os.path.isfile(ruta) and ruta.endswith(".csv"):
+        with open(ruta, newline="", encoding="utf-8") as f:
+            data = list(csv.DictReader(f))
+        
+        nueva_lista = [d for d in data if d["nombre"].lower() != nombre.lower()]
+        
+        if len(nueva_lista) != len(data):
+            with open(ruta, "w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=CAMPOS)
+                writer.writeheader()
+                writer.writerows(nueva_lista)
+            
+            print(f"Pokémon {nombre.capitalize()} eliminado de {ruta}")
+            return True
+        
+        return False
+    
+    # Paso recursivo: explorar subdirectorios
+    if os.path.isdir(ruta):
+        try:
+            elementos = os.listdir(ruta)
+        except PermissionError:
+            return False
+        
+        for elemento in elementos:
+            ruta_completa = os.path.join(ruta, elemento)
+            if eliminar_pokemon_recursivo(ruta_completa, nombre):
+                return True
+    
     return False
 
 
@@ -120,27 +223,6 @@ def modificar_pokemon(nombre, campo, nuevo_valor, ruta_base="pokedex"):
 def eliminar_pokemon(nombre, ruta="pokedex"):
     """
     Elimina un Pokémon recorriendo recursivamente las carpetas.
+    Reemplaza completamente el uso de os.walk().
     """
-    for elemento in os.listdir(ruta):
-        ruta_completa = os.path.join(ruta, elemento)
-
-        if os.path.isdir(ruta_completa):
-            eliminado = eliminar_pokemon(nombre, ruta_completa)
-            if eliminado:
-                return True
-
-        elif ruta_completa.endswith(".csv"):
-            with open(ruta_completa, newline="", encoding="utf-8") as f:
-                data = list(csv.DictReader(f))
-
-            nueva_lista = [d for d in data if d["nombre"].lower() != nombre.lower()]
-
-            if len(nueva_lista) != len(data):
-                with open(ruta_completa, "w", newline="", encoding="utf-8") as f:
-                    writer = csv.DictWriter(f, fieldnames=CAMPOS)
-                    writer.writeheader()
-                    writer.writerows(nueva_lista)
-
-                print(f"Pokémon {nombre.capitalize()} eliminado de {ruta_completa}")
-                return True
-    return False
+    return eliminar_pokemon_recursivo(ruta, nombre)
