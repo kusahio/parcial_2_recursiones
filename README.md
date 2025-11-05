@@ -16,6 +16,121 @@ Sistema de gestión de Pokédex implementado en Python 3.x que utiliza una estru
 
 ---
 
+# 🚀 Guía Rápida de Inicio
+
+## Instalación en 3 Pasos
+
+### 1️⃣ Clonar el repositorio
+```bash
+git clone https://github.com/kusahio/parcial_2_recursiones.git
+cd parcial_2_recursiones
+```
+
+### 2️⃣ Instalar dependencias
+```bash
+pip install requests
+```
+
+### 3️⃣ Ejecutar
+```bash
+python main.py
+```
+
+---
+
+## ✅ Verificación de Instalación
+
+### Comprobar Python
+```bash
+python --version
+```
+Resultado esperado: `Python 3.8.0` o superior
+
+### Comprobar pip
+```bash
+pip --version
+```
+
+### Comprobar Git
+```bash
+git --version
+```
+
+---
+
+## 🎮 Primeros Pasos
+
+### Primera Ejecución
+Al ejecutar por primera vez, el sistema:
+1. ✅ Crea el directorio `pokedex/`
+2. ✅ Carga automáticamente 45 Pokémon (5 por generación)
+3. ✅ Muestra el menú principal
+
+### Opciones Recomendadas para Probar
+
+**Opción 2:** Mostrar todos los Pokémon
+- Ver todos los datos cargados automáticamente
+- Probar la paginación interactiva
+
+**Opción 1:** Agregar un Pokémon
+- Probar: `pikachu`, `charizard`, `mewtwo`
+- El sistema consulta PokéAPI automáticamente
+
+**Opción 3:** Buscar Pokémon
+- Probar búsquedas: `pika`, `char`, `mew`
+- Mínimo 3 caracteres
+
+**Opción 8:** Ver estadísticas
+- Muestra resumen completo de tu Pokédex
+
+---
+
+## 🐛 Solución Rápida de Problemas
+
+### Error: ModuleNotFoundError
+```bash
+pip install requests
+```
+
+### Error: python command not found
+Usar `python3` en lugar de `python`:
+```bash
+python3 main.py
+```
+
+### Error: Sin conexión a PokéAPI
+- Verificar conexión a Internet
+- Reintentar en unos minutos
+
+### El programa no carga datos
+- Si ya existe `pokedex/`, no cargará duplicados
+- Eliminar `pokedex/` para recargar:
+```bash
+# Windows
+rmdir /s pokedex
+
+# macOS/Linux
+rm -rf pokedex
+```
+
+---
+
+## 🎯 Funcionalidades Principales
+
+| Opción | Funcionalidad | Recursividad |
+|--------|---------------|--------------|
+| 1 | Agregar Pokémon | ❌ |
+| 2 | Mostrar todos | ✅ `leer_recursivo()` |
+| 3 | Buscar Pokémon | ✅ `buscar_csv_recursivo()` + `leer_recursivo()` |
+| 4 | Filtrar por generación | ✅ `leer_recursivo()` + `filtrar_por_criterio_recursivo()` |
+| 5 | Filtrar por tipo | ✅ `leer_recursivo()` + `filtrar_por_criterio_recursivo()` |
+| 6 | Modificar Pokémon | ✅ `buscar_y_modificar_recursivo()` |
+| 7 | Eliminar Pokémon | ✅ `eliminar_pokemon_recursivo()` |
+| 8 | Estadísticas | ✅ `leer_recursivo()` |
+| 9 | Salir | ❌ |
+
+---
+
 ## Diseño de la Estructura Jerárquica
 
 ### Estructura de 3 Niveles
