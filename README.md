@@ -16,6 +16,12 @@ Sistema de gestión de Pokédex implementado en Python 3.x que utiliza una estru
 
 ---
 
+## Video Explicativo
+
+**Enlace:** [Vídeo Explicativo Parcial 2 - Recursividad](https://drive.google.com/file/d/1sUTzX0BR2u7R2Bt8q4DjjaWghyC1hzUe/view?usp=sharing)
+
+---
+
 # 🚀 Guía Rápida de Inicio
 
 ## Instalación en 3 Pasos
@@ -1282,23 +1288,6 @@ python main.py
 - Estructura de 3 niveles justificada y natural
 - Refleja clasificación real de Pokémon
 - Escalable a nuevas generaciones
-
----
-
-## Video Explicativo
-
-**Enlace:** [Incluir URL del video aquí]
-
-**Duración:** Máximo 8 minutos
-
-**Contenido del video:**
-1. **Introducción (1 min):** Presentación del equipo y objetivo
-2. **Diseño jerárquico (2 min):** Explicación de los 3 niveles y justificación
-3. **Recursividad (3 min):** Demostración de funciones recursivas en acción
-4. **CRUD en funcionamiento (1.5 min):** Agregar, modificar, eliminar
-5. **Funcionalidades adicionales (0.5 min):** Filtros y estadísticas
-
----
 
 ## Criterios de Evaluación
 
