@@ -228,19 +228,51 @@ def filtrar_por_generacion():
             # Filtrar usando recursión
             pokemon_filtrados = filtrar_por_criterio_recursivo(datos, "generacion", gen_seleccionada)
             
+            # --- INICIO DE MODIFICACIÓN ---
+            
             # Validar resultados
             if not isinstance(pokemon_filtrados, list):
                 print("\nAVISO: Error al filtrar Pokémon.\n")
                 return
             
+            titulo_orden = ""
+            if pokemon_filtrados: # Solo preguntar si hay resultados
+                print("\n" + "-"*60)
+                print("Seleccionar orden:")
+                print("  1. Nombre (A-Z)")
+                print("  2. Nombre (Z-A)")
+                print("  3. ID (Menor a Mayor)")
+                print("  4. ID (Mayor a Menor)")
+                print("  [Enter]: Orden por defecto")
+                
+                opcion_orden = input("Selecciona una opción de orden: ").strip()
+                opcion_orden_int = int(opcion_orden)
+
+                if opcion_orden_int == 1:
+                    pokemon_filtrados.sort(key=lambda p: p.get('nombre', '').lower())
+                    titulo_orden = " | Orden: Nombre (A-Z)"
+                elif opcion_orden_int == 2:
+                    pokemon_filtrados.sort(key=lambda p: p.get('nombre', '').lower(), reverse=True)
+                    titulo_orden = " | Orden: Nombre (Z-A)"
+                elif opcion_orden_int == 3:
+                    # Convertir a int para orden numérico, manejando '' o None
+                    pokemon_filtrados.sort(key=lambda p: int(p.get('id', 0) or 0))
+                    titulo_orden = " | Orden: ID (Asc)"
+                elif opcion_orden_int == 4:
+                    pokemon_filtrados.sort(key=lambda p: int(p.get('id', 0) or 0), reverse=True)
+                    titulo_orden = " | Orden: ID (Desc)"
+            
             # Contar cantidad para el título
             cantidad = len(pokemon_filtrados)
             
+            titulo_completo = f"Pokémon de {gen_seleccionada.replace('generation-', 'generación ').upper()} | {cantidad} Pokémon encontrado(s){titulo_orden}"
+
             # Mostrar resultados con paginación
             mostrar_pokemon_filtrados(
                 pokemon_filtrados,
-                f"Pokémon de {gen_seleccionada.replace('generation-', 'generación ').upper()} | {cantidad} Pokémon encontrado(s)"
+                titulo_completo
             )
+            
         else:
             print("\nAVISO: Opción inválida.\n")
             
@@ -329,14 +361,42 @@ def filtrar_por_tipo():
                 print("\nAVISO: Error al filtrar Pokémon.\n")
                 return
             
+            titulo_orden = ""
+            if pokemon_filtrados: # Solo preguntar si hay resultados
+                print("\n" + "-"*60)
+                print("Seleccionar orden:")
+                print("  1. Nombre (A-Z)")
+                print("  2. Nombre (Z-A)")
+                print("  3. ID (Menor a Mayor)")
+                print("  4. ID (Mayor a Menor)")
+                print("  [Enter]: Orden por defecto")
+                
+                opcion_orden = input("Selecciona una opción de orden: ").strip()
+                opcion_orden_int = int(opcion_orden)
+                if opcion_orden_int == 1:
+                    pokemon_filtrados.sort(key=lambda p: p.get('nombre', '').lower())
+                    titulo_orden = " | Orden: Nombre (A-Z)"
+                elif opcion_orden_int == 2:
+                    pokemon_filtrados.sort(key=lambda p: p.get('nombre', '').lower(), reverse=True)
+                    titulo_orden = " | Orden: Nombre (Z-A)"
+                elif opcion_orden_int == 3:
+                    pokemon_filtrados.sort(key=lambda p: int(p.get('id', 0) or 0))
+                    titulo_orden = " | Orden: ID (Asc)"
+                elif opcion_orden_int == 4:
+                    pokemon_filtrados.sort(key=lambda p: int(p.get('id', 0) or 0), reverse=True)
+                    titulo_orden = " | Orden: ID (Desc)"
+            
             # Contar cantidad para el título
             cantidad = len(pokemon_filtrados)
             
             # Mostrar resultados con paginación
             mostrar_pokemon_filtrados(
                 pokemon_filtrados,
-                f"Pokémon de tipo {tipo_seleccionado.upper()} | {cantidad} Pokémon encontrado(s)"
+                f"Pokémon de tipo {tipo_seleccionado.upper()} | {cantidad} Pokémon encontrado(s){titulo_orden}"
             )
+            
+            # --- FIN DE MODIFICACIÓN ---
+            
         else:
             print("\nAVISO: Opción inválida.\n")
             

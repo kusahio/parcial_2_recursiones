@@ -165,7 +165,7 @@ def paginar_pokemon(resultados, pokemon_por_pagina=5, titulo='Resultados', tipo_
 
         # Validar que pokemon_por_pagina sea un entero positivo
         if not isinstance(pokemon_por_pagina, int) or pokemon_por_pagina <= 0:
-            pokemon_por_pagina = 10
+            pokemon_por_pagina = 5
 
         # Limitar pokemon_por_pagina a valores razonables
         pokemon_por_pagina = min(max(1, pokemon_por_pagina), 100)
